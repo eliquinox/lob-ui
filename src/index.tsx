@@ -6,19 +6,6 @@ import * as serviceWorker from "./serviceWorker"
 import { MuiThemeProvider } from "@material-ui/core/styles"
 import CssBaseline from "@material-ui/core/CssBaseline"
 import { theme } from "./theme"
-import Amplify, { API } from "aws-amplify"
-import { bookDsn } from "./constants"
-
-Amplify.configure({
-    API: {
-        endpoints: [
-            {
-                name: "bookApi",
-                endpoint: bookDsn,
-            },
-        ],
-    },
-})
 
 ReactDOM.render(
     <React.StrictMode>
