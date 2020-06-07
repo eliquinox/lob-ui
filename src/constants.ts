@@ -1,0 +1,1 @@
+export const bookDsn = process.env.REACT_APP_SERVER_DSN

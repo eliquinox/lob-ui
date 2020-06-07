@@ -1,25 +1,27 @@
-import {Book, Order, Side} from "./types";
-import axios from "axios";
+import { Book, Order, Side } from "./types"
+import axios from "axios"
+import { bookDsn } from "../constants"
 
-export const getBook = (callback?: ((book: Book) => void)) =>
-    axios('http://localhost:4567/book')
-        .then(response => response.data)
-        .then(data => callback && callback(data))
+const instance = axios.create({
+    baseURL: bookDsn,
+})
 
+export const getBook = (callback?: (book: Book) => void) =>
+    instance
+        .get("/book")
+        .then((response) => response.data)
+        .then((data) => callback && callback(data))
 
-export const placeOrder = (order: Order) =>
-    axios.post('http://localhost:4567/book', order)
-
+export const placeOrder = (order: Order) => instance.post("/book", order)
 
 export const cancelOrder = (uuid: string, size: number) =>
-    axios.put('http://localhost:4567/book', {
+    instance.put("/book", {
         uuid,
-        size
+        size,
     })
 
-
 export const getVwapPricing = (action: Side, size: number) =>
-    axios.post('http://localhost:4567/vwap', {
+    instance.post("/vwap", {
         action,
-        size
+        size,
     })

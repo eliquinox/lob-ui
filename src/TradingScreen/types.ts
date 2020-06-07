@@ -1,8 +1,8 @@
-import {get, values, flatMap} from "lodash";
+import { get, values, flatMap } from "lodash"
 
 export type Book = {
-    bids: {[key: string]: Level}
-    offers: {[key: string]: Level}
+    bids: { [key: string]: Level }
+    offers: { [key: string]: Level }
 }
 
 export type Side = "BID" | "OFFER"

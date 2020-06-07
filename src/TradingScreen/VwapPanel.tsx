@@ -1,13 +1,13 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {Box, Grid, Paper, TextField, Typography} from "@material-ui/core";
-import React, {useRef, useState} from "react";
-import {getVwapPricing} from "./requests";
+import { makeStyles } from "@material-ui/core/styles"
+import { Box, Grid, Paper, TextField, Typography } from "@material-ui/core"
+import React, { useRef, useState } from "react"
+import { getVwapPricing } from "./requests"
 
 const useStyles = makeStyles({
     paper: {
-        textAlign: 'center',
+        textAlign: "center",
     },
-});
+})
 
 const getNumberFromRef = (ref: React.MutableRefObject<any>): number => {
     const n = ref.current.valueOf().value
@@ -19,16 +19,14 @@ const setVwapPrices = (
     buyPriceCallBack: (price: number) => void,
     sellPriceCallBack: (price: number) => void
 ) => {
-    getVwapPricing('BID', size)
-        .then(r => {
-            const price = r.data.price
-            price ? buyPriceCallBack(price) : buyPriceCallBack(Number.NaN)
-        })
-    getVwapPricing('OFFER', size)
-        .then(r => {
-            const price = r.data.price
-            price ? sellPriceCallBack(price) : sellPriceCallBack(Number.NaN)
-        })
+    getVwapPricing("BID", size).then((r) => {
+        const price = r.data.price
+        price ? buyPriceCallBack(price) : buyPriceCallBack(Number.NaN)
+    })
+    getVwapPricing("OFFER", size).then((r) => {
+        const price = r.data.price
+        price ? sellPriceCallBack(price) : sellPriceCallBack(Number.NaN)
+    })
 }
 
 export default () => {
@@ -46,14 +44,18 @@ export default () => {
                 <div>
                     <Box m={1} pt={1}>
                         <TextField
-                            style={{maxWidth: 120}}
+                            style={{ maxWidth: 120 }}
                             id="outlined-basic"
                             label="Size"
                             variant="outlined"
                             onChange={() => {
                                 const size = getNumberFromRef(sizeRef)
                                 if (size)
-                                    setVwapPrices(size, setBuyPrice, setSellPrice)
+                                    setVwapPrices(
+                                        size,
+                                        setBuyPrice,
+                                        setSellPrice
+                                    )
                                 else {
                                     setBuyPrice(Number.NaN)
                                     setSellPrice(Number.NaN)
@@ -66,13 +68,13 @@ export default () => {
                 <Grid container justify="space-around">
                     <Box m={1} pt={1}>
                         <Typography variant="h5">To Sell</Typography>
-                        <Typography variant="h5" style={{color: "#df7373"}}>
+                        <Typography variant="h5" style={{ color: "#df7373" }}>
                             {sellPrice}
                         </Typography>
                     </Box>
                     <Box m={1} pt={1}>
                         <Typography variant="h5">To Buy</Typography>
-                        <Typography variant="h5" style={{color: "#4ea8de"}}>
+                        <Typography variant="h5" style={{ color: "#4ea8de" }}>
                             {buyPrice}
                         </Typography>
                     </Box>

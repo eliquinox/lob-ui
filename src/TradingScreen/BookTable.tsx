@@ -1,6 +1,6 @@
-import {Book} from "./types";
-import {get, keys} from "lodash";
-import React from "react";
+import { Book } from "./types"
+import { get, keys } from "lodash"
+import React from "react"
 import {
     Divider,
     Paper,
@@ -11,16 +11,15 @@ import {
     TableHead,
     TableRow,
     Typography,
-    withStyles
-} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
-
+    withStyles,
+} from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles({
     table: {
         minWidth: 450,
     },
-});
+})
 
 const PriceCell = withStyles({
     body: {
@@ -30,37 +29,41 @@ const PriceCell = withStyles({
         borderRightColor: "#515151",
         borderLeftWidth: 1,
         borderLeftStyle: "solid",
-        borderLeftColor: "#515151"
-    }
-})(TableCell);
-
+        borderLeftColor: "#515151",
+    },
+})(TableCell)
 
 const BidCell = withStyles({
     body: {
         fontSize: 20,
-        color: "#4ea8de"
+        color: "#4ea8de",
     },
-})(TableCell);
-
+})(TableCell)
 
 const OfferCell = withStyles({
     body: {
         fontSize: 20,
         color: "#df7373",
     },
-})(TableCell);
+})(TableCell)
 
-
-export default ({book}: {book?: Book}) => {
+export default ({ book }: { book?: Book }) => {
     const rows = bookToTableData(book)
     const classes = useStyles()
     return (
         <TableContainer component={Paper}>
-            <Typography variant="h5" style={{textAlign: "center", marginTop: 10, marginBottom: 10}}>
+            <Typography
+                variant="h5"
+                style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }}
+            >
                 Limit Order Book
             </Typography>
-            <Divider style={{borderColor: "#515151"}}/>
-            <Table className={classes.table} size="small" aria-label="a dense table">
+            <Divider style={{ borderColor: "#515151" }} />
+            <Table
+                className={classes.table}
+                size="small"
+                aria-label="a dense table"
+            >
                 <TableHead>
                     <TableRow>
                         <TableCell align="center">Offers</TableCell>
@@ -71,7 +74,9 @@ export default ({book}: {book?: Book}) => {
                 <TableBody>
                     {rows.map((row) => (
                         <TableRow hover key={row.price}>
-                            <OfferCell align="center">{row.offerVolume}</OfferCell>
+                            <OfferCell align="center">
+                                {row.offerVolume}
+                            </OfferCell>
                             <PriceCell align="center">{row.price}</PriceCell>
                             <BidCell align="center">{row.bidVolume}</BidCell>
                         </TableRow>
@@ -79,7 +84,6 @@ export default ({book}: {book?: Book}) => {
                 </TableBody>
             </Table>
         </TableContainer>
-
     )
 }
 
@@ -90,17 +94,21 @@ const bookToTableData = (book?: Book) => {
     const bidPrices = keys(bids)
     const offerPrices = keys(offers)
 
-    return [...bidPrices, ...offerPrices].reverse().map(p => {
+    return [...bidPrices, ...offerPrices].reverse().map((p) => {
         const bidLevel = get(bids, p)
-        const bidVolume = bidLevel ? bidLevel.placements.reduce((a, b) => a + b.size, 0) : ""
+        const bidVolume = bidLevel
+            ? bidLevel.placements.reduce((a, b) => a + b.size, 0)
+            : ""
 
         const offerLevel = get(offers, p)
-        const offerVolume = offerLevel ? offerLevel.placements.reduce((a, b) => a + b.size, 0) : ""
+        const offerVolume = offerLevel
+            ? offerLevel.placements.reduce((a, b) => a + b.size, 0)
+            : ""
 
-        return  {
+        return {
             bidVolume: bidVolume,
             price: p,
-            offerVolume: offerVolume
+            offerVolume: offerVolume,
         }
     })
 }

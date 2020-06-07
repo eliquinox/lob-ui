@@ -1,31 +1,31 @@
-import React from 'react';
-import clsx from 'clsx';
-import {makeStyles, useTheme} from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ClearIcon from '@material-ui/icons/Clear';
-import {Book, Placement} from "./types";
-import {cancelOrder, getBook} from "./requests";
+import React from "react"
+import clsx from "clsx"
+import { makeStyles, useTheme } from "@material-ui/core/styles"
+import Drawer from "@material-ui/core/Drawer"
+import CssBaseline from "@material-ui/core/CssBaseline"
+import AppBar from "@material-ui/core/AppBar"
+import Toolbar from "@material-ui/core/Toolbar"
+import List from "@material-ui/core/List"
+import Typography from "@material-ui/core/Typography"
+import Divider from "@material-ui/core/Divider"
+import IconButton from "@material-ui/core/IconButton"
+import MenuIcon from "@material-ui/icons/Menu"
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
+import ChevronRightIcon from "@material-ui/icons/ChevronRight"
+import ListItem from "@material-ui/core/ListItem"
+import ListItemText from "@material-ui/core/ListItemText"
+import ClearIcon from "@material-ui/icons/Clear"
+import { Book, Placement } from "./types"
+import { cancelOrder, getBook } from "./requests"
 
 const drawerWidth = 300
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        display: 'flex',
+        display: "flex",
     },
     appBar: {
-        transition: theme.transitions.create(['margin', 'width'], {
+        transition: theme.transitions.create(["margin", "width"], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     appBarShift: {
         width: `calc(100% - ${drawerWidth}px)`,
         marginLeft: drawerWidth,
-        transition: theme.transitions.create(['margin', 'width'], {
+        transition: theme.transitions.create(["margin", "width"], {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(2),
     },
     hide: {
-        display: 'none',
+        display: "none",
     },
     drawer: {
         width: drawerWidth,
@@ -52,45 +52,52 @@ const useStyles = makeStyles((theme) => ({
         width: drawerWidth,
     },
     drawerHeader: {
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         padding: theme.spacing(0, 1),
         // necessary for content to be below app bar
         ...theme.mixins.toolbar,
-        justifyContent: 'flex-end',
+        justifyContent: "flex-end",
     },
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-        transition: theme.transitions.create('margin', {
+        transition: theme.transitions.create("margin", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
         marginLeft: -drawerWidth,
     },
     contentShift: {
-        transition: theme.transitions.create('margin', {
+        transition: theme.transitions.create("margin", {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
         marginLeft: 0,
     },
-}));
+}))
 
-const getPlacementText = (placement: Placement) => `${placement.side} ${placement.size}@${placement.price}`
+const getPlacementText = (placement: Placement) =>
+    `${placement.side} ${placement.size}@${placement.price}`
 
-export default ({placements, setBook}: { placements: Placement[], setBook: (book: Book) => void}) => {
-    const classes = useStyles();
-    const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+export default ({
+    placements,
+    setBook,
+}: {
+    placements: Placement[]
+    setBook: (book: Book) => void
+}) => {
+    const classes = useStyles()
+    const theme = useTheme()
+    const [open, setOpen] = React.useState(false)
 
     const handleDrawerOpen = () => {
-        setOpen(true);
-    };
+        setOpen(true)
+    }
 
     const handleDrawerClose = () => {
-        setOpen(false);
-    };
+        setOpen(false)
+    }
 
     return (
         <div className={classes.root}>
@@ -107,7 +114,10 @@ export default ({placements, setBook}: { placements: Placement[], setBook: (book
                         aria-label="open drawer"
                         onClick={handleDrawerOpen}
                         edge="start"
-                        className={clsx(classes.menuButton, open && classes.hide)}
+                        className={clsx(
+                            classes.menuButton,
+                            open && classes.hide
+                        )}
                     >
                         <MenuIcon />
                     </IconButton>
@@ -127,20 +137,30 @@ export default ({placements, setBook}: { placements: Placement[], setBook: (book
             >
                 <div className={classes.drawerHeader}>
                     <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                        {theme.direction === "ltr" ? (
+                            <ChevronLeftIcon />
+                        ) : (
+                            <ChevronRightIcon />
+                        )}
                     </IconButton>
                 </div>
                 <Divider />
                 <List>
-                    {placements.map(p => (
+                    {placements.map((p) => (
                         <ListItem button key={p.uuid}>
                             <ListItemText primary={getPlacementText(p)} />
-                            <ClearIcon onClick={() => cancelOrder(p.uuid, p.size).then(() => getBook(setBook))}/>
+                            <ClearIcon
+                                onClick={() =>
+                                    cancelOrder(p.uuid, p.size).then(() =>
+                                        getBook(setBook)
+                                    )
+                                }
+                            />
                         </ListItem>
                     ))}
                 </List>
                 <Divider />
             </Drawer>
         </div>
-    );
+    )
 }
