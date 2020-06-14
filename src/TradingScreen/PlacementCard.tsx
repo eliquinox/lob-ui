@@ -15,6 +15,7 @@ import FilterNoneIcon from "@material-ui/icons/FilterNone"
 import { Book, Placement } from "./types"
 import React, { useRef } from "react"
 import { cancelOrder, getBook, placeOrder } from "./requests"
+import { toast } from "react-toastify"
 
 const useStyles = makeStyles({
     id: {
@@ -141,11 +142,11 @@ export default ({ placement, setBook }: { placement: Placement; setBook: (book: 
                         >
                             <Grid item style={{ marginTop: 3 }}>
                                 <Tooltip title="Copy ID " placement="top">
-                                    <IconButton size="small">
-                                        <FilterNoneIcon
-                                            fontSize="small"
-                                            onClick={() => navigator.clipboard.writeText(placement.uuid)}
-                                        />
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => navigator.clipboard.writeText(placement.uuid)}
+                                    >
+                                        <FilterNoneIcon fontSize="small" />
                                     </IconButton>
                                 </Tooltip>
                             </Grid>
@@ -156,14 +157,36 @@ export default ({ placement, setBook }: { placement: Placement; setBook: (book: 
                                         width: 50,
                                         height: 25,
                                     }}
-                                    onClick={() =>
-                                        handleOrderUpdate(
-                                            placement,
-                                            Number(priceRef.current.valueOf().value),
-                                            Number(sizeRef.current.valueOf().value),
-                                            sizeRef
-                                        ).then(() => getBook(setBook))
-                                    }
+                                    onClick={() => {
+                                        const inputPrice = Number(priceRef.current.valueOf().value)
+                                        const inputSize = Number(sizeRef.current.valueOf().value)
+                                        const saneOrder =
+                                            (inputSize > 0 || inputPrice > 0) &&
+                                            (inputPrice !== placement.price || inputSize !== placement.size)
+                                        saneOrder
+                                            ? addToast(
+                                                  handleOrderUpdate(
+                                                      placement,
+                                                      Number(priceRef.current.valueOf().value),
+                                                      Number(sizeRef.current.valueOf().value),
+                                                      sizeRef
+                                                  )
+                                              ).then(() => getBook(setBook))
+                                            : toast.error(
+                                                  <div style={{ fontWeight: "bold" }}>
+                                                      Error updating order. Ensure new price and size are valid.
+                                                  </div>,
+                                                  {
+                                                      position: "top-right",
+                                                      autoClose: 2000,
+                                                      hideProgressBar: true,
+                                                      closeOnClick: true,
+                                                      pauseOnHover: true,
+                                                      draggable: true,
+                                                      progress: undefined,
+                                                  }
+                                              )
+                                    }}
                                 >
                                     Update
                                 </Button>
@@ -190,12 +213,12 @@ export default ({ placement, setBook }: { placement: Placement; setBook: (book: 
     )
 }
 
-const handleOrderUpdate = async (placement: Placement, newPrice: number, newSize: number, sizeRef: any) => {
-    const unchanged = newPrice === placement.price && newSize === placement.size
-    const priceAndSizeChanged = newPrice !== placement.price && newSize !== placement.size
-    const onlyPriceChanged = newPrice !== placement.price && newSize === placement.size
-    const sizeIncreased = newSize > placement.size
-    const sizeDecreased = newSize < placement.size
+const handleOrderUpdate = async (placement: Placement, inputPrice: number, inputSize: number, sizeRef: any) => {
+    const unchanged = inputPrice === placement.price && inputSize === placement.size
+    const priceAndSizeChanged = inputPrice !== placement.price && inputSize !== placement.size
+    const onlyPriceChanged = inputPrice !== placement.price && inputSize === placement.size
+    const sizeIncreased = inputSize > placement.size
+    const sizeDecreased = inputSize < placement.size
 
     if (unchanged) return
 
@@ -203,8 +226,8 @@ const handleOrderUpdate = async (placement: Placement, newPrice: number, newSize
         sizeRef.current.value = Number(sizeRef.current.valueOf().value) - placement.size
         return cancelOrder(placement.uuid, placement.size).then(() =>
             placeOrder({
-                price: newPrice,
-                size: newSize,
+                price: inputPrice,
+                size: inputSize,
                 side: placement.side,
             })
         )
@@ -213,7 +236,7 @@ const handleOrderUpdate = async (placement: Placement, newPrice: number, newSize
     if (onlyPriceChanged)
         return cancelOrder(placement.uuid, placement.size).then(() =>
             placeOrder({
-                price: newPrice,
+                price: inputPrice,
                 size: placement.size,
                 side: placement.side,
             })
@@ -223,12 +246,50 @@ const handleOrderUpdate = async (placement: Placement, newPrice: number, newSize
         sizeRef.current.value = Number(sizeRef.current.valueOf().value) - placement.size
         return placeOrder({
             price: placement.price,
-            size: newSize - placement.size,
+            size: inputSize - placement.size,
             side: placement.side,
         })
     }
 
     if (sizeDecreased) {
-        return cancelOrder(placement.uuid, placement.size - newSize)
+        return cancelOrder(placement.uuid, placement.size - inputSize)
     }
 }
+
+const addToast = (promise: Promise<any>) =>
+    promise
+        .then((response) => {
+            toast.success(
+                <div style={{ fontWeight: "bold" }}>
+                    Order updated:
+                    <pre style={{ fontWeight: "bold" }}>{JSON.stringify(response.data, undefined, 2)}</pre>
+                </div>,
+                {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                }
+            )
+        })
+        .catch((error) => {
+            console.log()
+            toast.error(
+                <div style={{ fontWeight: "bold" }}>
+                    Error placing order:
+                    <pre style={{ fontWeight: "bold" }}>{error.response.data.error}</pre>
+                </div>,
+                {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                }
+            )
+        })

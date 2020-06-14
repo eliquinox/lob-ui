@@ -7,6 +7,7 @@ import { getBook } from "./requests"
 import VwapPanel from "./VwapPanel"
 import OrdersPanel from "./OrdersPanel"
 import CompareArrowsIcon from "@material-ui/icons/CompareArrows"
+import { ToastContainer } from "react-toastify"
 
 export default () => {
     const [book, setBook] = useState<Book>()
@@ -54,6 +55,21 @@ export default () => {
                     </Grid>
                 </Grid>
             </Grid>
+            <ToastContainer
+                position="top-right"
+                style={{
+                    minWidth: 475,
+                }}
+                autoClose={1000}
+                hideProgressBar
+                limit={1}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </div>
     )
 }

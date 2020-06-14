@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core"
 import React, { useRef } from "react"
 import { makeStyles } from "@material-ui/core/styles"
-import { toast, ToastContainer } from "react-toastify"
+import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { Book, Order } from "./types"
 import { getBook, placeOrder } from "./requests"
@@ -23,46 +23,6 @@ const useStyles = makeStyles({
         textAlign: "center",
     },
 })
-
-const handleOrder = (order: Order, setBook: (book: Book) => void) => {
-    placeOrder(order)
-        .then((r) => {
-            toast.success(
-                <div style={{ fontWeight: "bold" }}>
-                    Order Placed:
-                    <pre style={{ fontWeight: "bold" }}>
-                        {JSON.stringify(r.data, undefined, 2)}
-                    </pre>
-                </div>,
-                {
-                    position: "top-right",
-                    autoClose: 1000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                }
-            )
-        })
-        .then(() => getBook(setBook))
-        .catch(() => {
-            toast.error(
-                <div style={{ fontWeight: "bold" }}>
-                    Error while placing the order!
-                </div>,
-                {
-                    position: "top-right",
-                    autoClose: 1000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                }
-            )
-        })
-}
 
 export default ({ setBook }: { setBook: (book: Book) => void }) => {
     const classes = useStyles()
@@ -76,11 +36,7 @@ export default ({ setBook }: { setBook: (book: Book) => void }) => {
                 <Box m={1} pt={1}>
                     <Typography variant="h5">Order Entry</Typography>
                 </Box>
-                <form
-                    noValidate
-                    autoComplete="off"
-                    onSubmit={(e) => e.preventDefault()}
-                >
+                <form noValidate autoComplete="off" onSubmit={(e) => e.preventDefault()}>
                     <Grid container>
                         <Box m={1} pt={1}>
                             <FormControl variant="outlined">
@@ -129,12 +85,8 @@ export default ({ setBook }: { setBook: (book: Book) => void }) => {
                                 handleOrder(
                                     {
                                         side: sideRef.current.valueOf().value,
-                                        price: Number(
-                                            priceRef.current.valueOf().value
-                                        ),
-                                        size: Number(
-                                            sizeRef.current.valueOf().value
-                                        ),
+                                        price: Number(priceRef.current.valueOf().value),
+                                        size: Number(sizeRef.current.valueOf().value),
                                     },
                                     setBook
                                 )
@@ -145,21 +97,45 @@ export default ({ setBook }: { setBook: (book: Book) => void }) => {
                     </Box>
                 </form>
             </Paper>
-            <ToastContainer
-                position="top-right"
-                style={{
-                    minWidth: 400,
-                }}
-                autoClose={1000}
-                hideProgressBar
-                limit={1}
-                newestOnTop
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-            />
         </>
     )
+}
+
+const handleOrder = (order: Order, setBook: (book: Book) => void) => {
+    placeOrder(order)
+        .then((response) => {
+            toast.success(
+                <div style={{ fontWeight: "bold" }}>
+                    Order placed:
+                    <pre style={{ fontWeight: "bold" }}>{JSON.stringify(response.data, undefined, 2)}</pre>
+                </div>,
+                {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                }
+            )
+        })
+        .catch((error) => {
+            toast.error(
+                <div style={{ fontWeight: "bold" }}>
+                    Error placing order:
+                    <pre style={{ fontWeight: "bold" }}>{error.response.data.error}</pre>
+                </div>,
+                {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                }
+            )
+        })
+        .then(() => getBook(setBook))
 }
