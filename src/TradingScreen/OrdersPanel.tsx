@@ -16,7 +16,7 @@ import { Book, bookToPlacements } from "./types"
 import PlacementCard from "./PlacementCard"
 import { ListItem } from "@material-ui/core"
 
-const drawerWidth = 475
+const drawerWidth = 485
 
 const useStyles = makeStyles((theme) => ({
     root: {

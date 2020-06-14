@@ -33,7 +33,7 @@ export default ({ placement, setBook }: { placement: Placement; setBook: (book: 
             style={{
                 marginLeft: 5,
                 marginRight: 5,
-                width: 415,
+                width: 425,
             }}
         >
             <CardContent>

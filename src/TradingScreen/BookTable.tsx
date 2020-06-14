@@ -52,18 +52,11 @@ export default ({ book }: { book?: Book }) => {
     const classes = useStyles()
     return (
         <TableContainer component={Paper}>
-            <Typography
-                variant="h5"
-                style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }}
-            >
+            <Typography variant="h5" style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }}>
                 Limit Order Book
             </Typography>
             <Divider style={{ borderColor: "#515151" }} />
-            <Table
-                className={classes.table}
-                size="small"
-                aria-label="a dense table"
-            >
+            <Table className={classes.table} size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow>
                         <TableCell align="center">Offers</TableCell>
@@ -74,9 +67,7 @@ export default ({ book }: { book?: Book }) => {
                 <TableBody>
                     {rows.map((row) => (
                         <TableRow hover key={row.price}>
-                            <OfferCell align="center">
-                                {row.offerVolume}
-                            </OfferCell>
+                            <OfferCell align="center">{row.offerVolume}</OfferCell>
                             <PriceCell align="center">{row.price}</PriceCell>
                             <BidCell align="center">{row.bidVolume}</BidCell>
                         </TableRow>
@@ -96,14 +87,10 @@ const bookToTableData = (book?: Book) => {
 
     return [...bidPrices, ...offerPrices].reverse().map((p) => {
         const bidLevel = get(bids, p)
-        const bidVolume = bidLevel
-            ? bidLevel.placements.reduce((a, b) => a + b.size, 0)
-            : ""
+        const bidVolume = bidLevel ? bidLevel.placements.reduce((a, b) => a + b.size, 0) : ""
 
         const offerLevel = get(offers, p)
-        const offerVolume = offerLevel
-            ? offerLevel.placements.reduce((a, b) => a + b.size, 0)
-            : ""
+        const offerVolume = offerLevel ? offerLevel.placements.reduce((a, b) => a + b.size, 0) : ""
 
         return {
             bidVolume: bidVolume,
