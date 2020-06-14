@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import clsx from "clsx"
 import { makeStyles, useTheme } from "@material-ui/core/styles"
 import Drawer from "@material-ui/core/Drawer"
@@ -12,13 +12,11 @@ import IconButton from "@material-ui/core/IconButton"
 import MenuIcon from "@material-ui/icons/Menu"
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
 import ChevronRightIcon from "@material-ui/icons/ChevronRight"
-import ListItem from "@material-ui/core/ListItem"
-import ListItemText from "@material-ui/core/ListItemText"
-import ClearIcon from "@material-ui/icons/Clear"
-import { Book, Placement } from "./types"
-import { cancelOrder, getBook } from "./requests"
+import { Book, bookToPlacements } from "./types"
+import PlacementCard from "./PlacementCard"
+import { ListItem } from "@material-ui/core"
 
-const drawerWidth = 300
+const drawerWidth = 475
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
     },
     drawerPaper: {
         width: drawerWidth,
+        background: "#303030",
     },
     drawerHeader: {
         display: "flex",
@@ -77,19 +76,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const getPlacementText = (placement: Placement) =>
-    `${placement.side} ${placement.size}@${placement.price}`
-
-export default ({
-    placements,
-    setBook,
-}: {
-    placements: Placement[]
-    setBook: (book: Book) => void
-}) => {
+export default ({ book, setBook }: { book?: Book; setBook: (book: Book) => void }) => {
     const classes = useStyles()
     const theme = useTheme()
-    const [open, setOpen] = React.useState(false)
+    const [open, setOpen] = useState(true)
+    const placements = bookToPlacements(book)
 
     const handleDrawerOpen = () => {
         setOpen(true)
@@ -114,15 +105,12 @@ export default ({
                         aria-label="open drawer"
                         onClick={handleDrawerOpen}
                         edge="start"
-                        className={clsx(
-                            classes.menuButton,
-                            open && classes.hide
-                        )}
+                        className={clsx(classes.menuButton, open && classes.hide)}
                     >
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap>
-                        Orders
+                        Open Orders
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -137,25 +125,14 @@ export default ({
             >
                 <div className={classes.drawerHeader}>
                     <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === "ltr" ? (
-                            <ChevronLeftIcon />
-                        ) : (
-                            <ChevronRightIcon />
-                        )}
+                        {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                     </IconButton>
                 </div>
                 <Divider />
                 <List>
                     {placements.map((p) => (
-                        <ListItem button key={p.uuid}>
-                            <ListItemText primary={getPlacementText(p)} />
-                            <ClearIcon
-                                onClick={() =>
-                                    cancelOrder(p.uuid, p.size).then(() =>
-                                        getBook(setBook)
-                                    )
-                                }
-                            />
+                        <ListItem key={p.uuid}>
+                            <PlacementCard placement={p} setBook={setBook} />
                         </ListItem>
                     ))}
                 </List>

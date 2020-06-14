@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import BookTable from "./BookTable"
 import { Grid, Typography } from "@material-ui/core"
 import OrderPlacement from "./OrderPlacement"
-import { Book, bookToPlacements } from "./types"
+import { Book } from "./types"
 import { getBook } from "./requests"
 import VwapPanel from "./VwapPanel"
 import OrdersPanel from "./OrdersPanel"
@@ -17,17 +17,9 @@ export default () => {
 
     return (
         <div>
-            <Grid
-                container
-                direction="column"
-                alignItems="center"
-                justify="center"
-            >
+            <Grid container direction="column" alignItems="center" justify="center">
                 <Grid item style={{ marginBottom: 50 }}>
-                    <OrdersPanel
-                        placements={bookToPlacements(book)}
-                        setBook={setBook}
-                    />
+                    <OrdersPanel book={book} setBook={setBook} />
                 </Grid>
                 <Grid
                     item
