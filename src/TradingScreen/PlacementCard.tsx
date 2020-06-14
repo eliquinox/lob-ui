@@ -161,7 +161,8 @@ export default ({ placement, setBook }: { placement: Placement; setBook: (book: 
                                         const inputPrice = Number(priceRef.current.valueOf().value)
                                         const inputSize = Number(sizeRef.current.valueOf().value)
                                         const saneOrder =
-                                            (inputSize > 0 || inputPrice > 0) &&
+                                            inputSize > 0 &&
+                                            inputPrice > 0 &&
                                             (inputPrice !== placement.price || inputSize !== placement.size)
                                         saneOrder
                                             ? addToast(
@@ -215,15 +216,13 @@ export default ({ placement, setBook }: { placement: Placement; setBook: (book: 
 
 const handleOrderUpdate = async (placement: Placement, inputPrice: number, inputSize: number, sizeRef: any) => {
     const unchanged = inputPrice === placement.price && inputSize === placement.size
-    const priceAndSizeChanged = inputPrice !== placement.price && inputSize !== placement.size
-    const onlyPriceChanged = inputPrice !== placement.price && inputSize === placement.size
+    const priceChanged = inputPrice !== placement.price
     const sizeIncreased = inputSize > placement.size
     const sizeDecreased = inputSize < placement.size
 
     if (unchanged) return
 
-    if (priceAndSizeChanged) {
-        sizeRef.current.value = Number(sizeRef.current.valueOf().value) - placement.size
+    if (priceChanged) {
         return cancelOrder(placement.uuid, placement.size).then(() =>
             placeOrder({
                 price: inputPrice,
@@ -233,17 +232,8 @@ const handleOrderUpdate = async (placement: Placement, inputPrice: number, input
         )
     }
 
-    if (onlyPriceChanged)
-        return cancelOrder(placement.uuid, placement.size).then(() =>
-            placeOrder({
-                price: inputPrice,
-                size: placement.size,
-                side: placement.side,
-            })
-        )
-
     if (sizeIncreased) {
-        sizeRef.current.value = Number(sizeRef.current.valueOf().value) - placement.size
+        sizeRef.current.value = placement.size
         return placeOrder({
             price: placement.price,
             size: inputSize - placement.size,
@@ -276,7 +266,6 @@ const addToast = (promise: Promise<any>) =>
             )
         })
         .catch((error) => {
-            console.log()
             toast.error(
                 <div style={{ fontWeight: "bold" }}>
                     Error placing order:
