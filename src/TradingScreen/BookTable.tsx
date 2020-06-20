@@ -1,6 +1,6 @@
 import { Book } from "./types"
 import { get, keys } from "lodash"
-import React, { useEffect } from "react"
+import React from "react"
 import {
     Divider,
     Paper,
