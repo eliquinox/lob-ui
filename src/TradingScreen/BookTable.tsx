@@ -1,6 +1,6 @@
 import { Book } from "./types"
 import { get, keys } from "lodash"
-import React from "react"
+import React, { useEffect } from "react"
 import {
     Divider,
     Paper,
@@ -14,6 +14,7 @@ import {
     withStyles,
 } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
+import { getBook, placeOrder } from "./requests"
 
 const useStyles = makeStyles({
     table: {
@@ -47,7 +48,17 @@ const OfferCell = withStyles({
     },
 })(TableCell)
 
-export default ({ book }: { book?: Book }) => {
+export default ({
+    book,
+    setBook,
+    oneClickTrading,
+    oneClickTradingSize,
+}: {
+    book?: Book
+    setBook: (book: Book) => void
+    oneClickTrading: boolean
+    oneClickTradingSize: number
+}) => {
     const rows = bookToTableData(book)
     const classes = useStyles()
     return (
@@ -67,9 +78,33 @@ export default ({ book }: { book?: Book }) => {
                 <TableBody>
                     {rows.map((row) => (
                         <TableRow hover key={row.price}>
-                            <OfferCell align="center">{row.offerVolume}</OfferCell>
+                            <OfferCell
+                                align="center"
+                                onClick={() =>
+                                    oneClickTrading &&
+                                    placeOrder({
+                                        side: "offer",
+                                        price: Number(row.price),
+                                        size: oneClickTradingSize,
+                                    }).then(() => getBook(setBook))
+                                }
+                            >
+                                {row.offerVolume}
+                            </OfferCell>
                             <PriceCell align="center">{row.price}</PriceCell>
-                            <BidCell align="center">{row.bidVolume}</BidCell>
+                            <BidCell
+                                align="center"
+                                onClick={() =>
+                                    oneClickTrading &&
+                                    placeOrder({
+                                        side: "bid",
+                                        price: Number(row.price),
+                                        size: oneClickTradingSize,
+                                    }).then(() => getBook(setBook))
+                                }
+                            >
+                                {row.bidVolume}
+                            </BidCell>
                         </TableRow>
                     ))}
                 </TableBody>

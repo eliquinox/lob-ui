@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react"
 import BookTable from "./BookTable"
 import { Grid, Typography } from "@material-ui/core"
-import OrderPlacement from "./OrderPlacement"
 import { Book } from "./types"
 import { getBook } from "./requests"
-import VwapPanel from "./VwapPanel"
-import OrdersPanel from "./OrdersPanel"
 import CompareArrowsIcon from "@material-ui/icons/CompareArrows"
 import { ToastContainer } from "react-toastify"
+import OrderPlacementPanel from "./OrderPlacementPanel"
+import OrderManagementPanel from "./OrderManagementPanel"
 
 export default () => {
     const [book, setBook] = useState<Book>()
+    const [oneClickTrading, setOneClickTrading] = useState(false)
+    const [oneClickTradingSize, setOneClickTradingSize] = useState<number>(1)
 
     useEffect(() => {
         ;(async () => await getBook(setBook))()
@@ -19,9 +20,6 @@ export default () => {
     return (
         <div>
             <Grid container direction="column" alignItems="center" justify="center">
-                <Grid item style={{ marginBottom: 50 }}>
-                    <OrdersPanel book={book} setBook={setBook} />
-                </Grid>
                 <Grid
                     item
                     style={{
@@ -30,7 +28,7 @@ export default () => {
                         marginBottom: 10,
                     }}
                 >
-                    <Typography variant="h4">EXCHANGE</Typography>
+                    <Typography variant="h4">Quid pro Quo</Typography>
                     <CompareArrowsIcon fontSize="large" />
                 </Grid>
                 <Grid
@@ -39,19 +37,25 @@ export default () => {
                     alignItems="flex-start"
                     style={{ marginTop: 150, marginBottom: 10 }}
                 >
-                    <Grid item />
-                    <Grid item style={{ marginLeft: 440 }}>
-                        <BookTable book={book} />
+                    <Grid item>
+                        <OrderManagementPanel book={book} setBook={setBook} />
                     </Grid>
-                    <Grid item style={{ marginRight: 50 }}>
-                        <Grid container direction="column">
-                            <Grid item>
-                                <OrderPlacement setBook={setBook} />
-                            </Grid>
-                            <Grid item>
-                                <VwapPanel />
-                            </Grid>
-                        </Grid>
+                    <Grid item style={{ marginRight: 60 }}>
+                        <BookTable
+                            book={book}
+                            setBook={setBook}
+                            oneClickTrading={oneClickTrading}
+                            oneClickTradingSize={oneClickTradingSize}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <OrderPlacementPanel
+                            setBook={setBook}
+                            oneClickTrading={oneClickTrading}
+                            setOneClickTrading={setOneClickTrading}
+                            oneClickTradingSize={oneClickTradingSize}
+                            setOneClickTradingSize={setOneClickTradingSize}
+                        />
                     </Grid>
                 </Grid>
             </Grid>

@@ -1,13 +1,6 @@
-import { makeStyles } from "@material-ui/core/styles"
-import { Box, Grid, Paper, TextField, Typography } from "@material-ui/core"
+import { Box, Card, Grid, TextField, Typography } from "@material-ui/core"
 import React, { useRef, useState } from "react"
 import { getVwapPricing } from "./requests"
-
-const useStyles = makeStyles({
-    paper: {
-        textAlign: "center",
-    },
-})
 
 const getNumberFromRef = (ref: React.MutableRefObject<any>): number => {
     const n = ref.current.valueOf().value
@@ -30,13 +23,21 @@ const setVwapPrices = (
 }
 
 export default () => {
+    // TODO: update when book changes
     const sizeRef = useRef<any>(0)
     const [buyPrice, setBuyPrice] = useState<number>(Number.NaN)
     const [sellPrice, setSellPrice] = useState<number>(Number.NaN)
-    const classes = useStyles()
 
     return (
-        <Paper className={classes.paper}>
+        <Card
+            style={{
+                marginTop: 10,
+                marginLeft: 5,
+                marginRight: 5,
+                width: 410,
+                textAlign: "center",
+            }}
+        >
             <Box m={1} pt={1}>
                 <Typography variant="h5">VWAP Pricing</Typography>
             </Box>
@@ -50,12 +51,7 @@ export default () => {
                             variant="outlined"
                             onChange={() => {
                                 const size = getNumberFromRef(sizeRef)
-                                if (size)
-                                    setVwapPrices(
-                                        size,
-                                        setBuyPrice,
-                                        setSellPrice
-                                    )
+                                if (size) setVwapPrices(size, setBuyPrice, setSellPrice)
                                 else {
                                     setBuyPrice(Number.NaN)
                                     setSellPrice(Number.NaN)
@@ -80,6 +76,6 @@ export default () => {
                     </Box>
                 </Grid>
             </Grid>
-        </Paper>
+        </Card>
     )
 }

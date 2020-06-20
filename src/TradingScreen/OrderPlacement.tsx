@@ -1,102 +1,231 @@
 import {
-    Box,
     Button,
+    Card,
+    CardContent,
+    Divider,
     FormControl,
+    FormControlLabel,
     Grid,
-    InputLabel,
-    MenuItem,
-    OutlinedInput,
-    Paper,
-    Select,
+    Radio,
+    RadioGroup,
+    Switch,
     TextField,
+    Tooltip,
     Typography,
 } from "@material-ui/core"
-import React, { useRef } from "react"
-import { makeStyles } from "@material-ui/core/styles"
+import InfoIcon from "@material-ui/icons/Info"
+import ToggleButton from "@material-ui/lab/ToggleButton"
+import React, { useRef, useState } from "react"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { Book, Order } from "./types"
 import { getBook, placeOrder } from "./requests"
+import { ToggleButtonGroup } from "@material-ui/lab"
 
-const useStyles = makeStyles({
-    paper: {
-        textAlign: "center",
-    },
-})
-
-export default ({ setBook }: { setBook: (book: Book) => void }) => {
-    const classes = useStyles()
-    const sideRef = useRef<any>("")
+export default ({
+    setBook,
+    oneClickTrading,
+    setOneClickTrading,
+    oneClickTradingSize,
+    setOneClickTradingSize,
+}: {
+    setBook: (book: Book) => void
+    oneClickTrading: boolean
+    setOneClickTrading: (b: boolean) => void
+    oneClickTradingSize: number
+    setOneClickTradingSize: (n: number) => void
+}) => {
+    const [side, setSide] = useState("bid")
     const priceRef = useRef<any>("")
     const sizeRef = useRef<any>("")
 
+    const handleOneClickTradingSizeChange = (_: any, newSize: number) => {
+        setOneClickTradingSize(newSize)
+    }
+
     return (
         <>
-            <Paper className={classes.paper}>
-                <Box m={1} pt={1}>
-                    <Typography variant="h5">Order Entry</Typography>
-                </Box>
-                <form noValidate autoComplete="off" onSubmit={(e) => e.preventDefault()}>
-                    <Grid container>
-                        <Box m={1} pt={1}>
-                            <FormControl variant="outlined">
-                                <InputLabel>Side</InputLabel>
-                                <Select
-                                    style={{ minWidth: 100, minHeight: 56 }}
-                                    id="select-outlined"
-                                    inputRef={sideRef}
-                                    input={<OutlinedInput labelWidth={40} />}
+            <Card
+                style={{
+                    marginLeft: 5,
+                    marginRight: 5,
+                    width: 410,
+                }}
+            >
+                <CardContent>
+                    <form noValidate autoComplete="off" onSubmit={(e) => e.preventDefault()}>
+                        <Grid container justify="space-between">
+                            <Grid item />
+                            <Grid item>
+                                <Typography variant="h6">Order Placement</Typography>
+                            </Grid>
+                            <Grid item />
+                        </Grid>
+                        <Divider style={{ marginTop: 5 }} />
+                        <Grid container justify="space-between">
+                            <Grid item style={{ marginTop: 5 }}>
+                                <Typography>One-click trading:</Typography>
+                            </Grid>
+                            <Grid item />
+                            <Grid item>
+                                <Switch
+                                    checked={oneClickTrading}
+                                    onChange={() => setOneClickTrading(!oneClickTrading)}
+                                    color="primary"
+                                    name="checkedB"
+                                    inputProps={{ "aria-label": "primary checkbox" }}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid container justify="space-between">
+                            <Grid item />
+                            <Grid item>
+                                <ToggleButtonGroup
+                                    size="small"
+                                    value={oneClickTrading && oneClickTradingSize}
+                                    exclusive
+                                    onChange={handleOneClickTradingSizeChange}
                                 >
-                                    <MenuItem value="bid">Bid</MenuItem>
-                                    <MenuItem value="offer">Offer</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Box>
-                        <Box m={1} pt={1}>
-                            <TextField
-                                style={{ maxWidth: 120 }}
-                                id="outlined-basic"
-                                label="Price"
-                                variant="outlined"
-                                inputRef={priceRef}
-                            />
-                        </Box>
-                        <Box m={1} pt={1}>
-                            <TextField
-                                style={{ maxWidth: 120 }}
-                                id="outlined-basic"
-                                label="Size"
-                                variant="outlined"
-                                inputRef={sizeRef}
-                            />
-                        </Box>
-                    </Grid>
-                    <Box m={1} pt={1}>
-                        <Button
-                            type="submit"
-                            variant="outlined"
-                            style={{
-                                minWidth: 235,
-                                minHeight: 56,
-                                marginBottom: 10,
-                            }}
-                            onClick={() => {
-                                toast.dismiss()
-                                handleOrder(
-                                    {
-                                        side: sideRef.current.valueOf().value,
-                                        price: Number(priceRef.current.valueOf().value),
-                                        size: Number(sizeRef.current.valueOf().value),
-                                    },
-                                    setBook
-                                )
-                            }}
-                        >
-                            Place
-                        </Button>
-                    </Box>
-                </form>
-            </Paper>
+                                    <ToggleButton value={1} disabled={!oneClickTrading}>
+                                        1
+                                    </ToggleButton>
+                                    <ToggleButton value={5} disabled={!oneClickTrading}>
+                                        5
+                                    </ToggleButton>
+                                    <ToggleButton value={10} disabled={!oneClickTrading}>
+                                        10
+                                    </ToggleButton>
+                                    <ToggleButton value={25} disabled={!oneClickTrading}>
+                                        25
+                                    </ToggleButton>
+                                    <ToggleButton value={50} disabled={!oneClickTrading}>
+                                        50
+                                    </ToggleButton>
+                                    <ToggleButton value={100} disabled={!oneClickTrading}>
+                                        100
+                                    </ToggleButton>
+                                    <ToggleButton value={125} disabled={!oneClickTrading}>
+                                        125
+                                    </ToggleButton>
+                                    <ToggleButton value={250} disabled={!oneClickTrading}>
+                                        250
+                                    </ToggleButton>
+                                    <ToggleButton value={500} disabled={!oneClickTrading}>
+                                        500
+                                    </ToggleButton>
+                                    <ToggleButton value={1000} disabled={!oneClickTrading}>
+                                        1000
+                                    </ToggleButton>
+                                    <ToggleButton value={2500} disabled={!oneClickTrading}>
+                                        2500
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
+                            </Grid>
+                            <Grid item />
+                        </Grid>
+                        <Divider style={{ marginTop: 10, marginBottom: 10 }} />
+                        <Grid container justify="space-between">
+                            <Grid item>
+                                <Typography style={{ marginLeft: 2, marginTop: 10 }}>Side:</Typography>
+                            </Grid>
+                            <Grid item style={{ marginRight: 50 }}>
+                                <FormControl component="fieldset">
+                                    <RadioGroup row defaultValue="bid" onChange={(_, side) => setSide(side)}>
+                                        <FormControlLabel
+                                            value="bid"
+                                            control={<Radio color="primary" />}
+                                            label="Bid"
+                                            labelPlacement="start"
+                                        />
+                                        <FormControlLabel
+                                            value="offer"
+                                            control={<Radio color="primary" />}
+                                            label="Offer"
+                                            labelPlacement="start"
+                                        />
+                                    </RadioGroup>
+                                </FormControl>
+                            </Grid>
+                            <Grid item style={{ marginTop: 8 }}>
+                                <Tooltip
+                                    title="Use this panel to place orders manually or trigger one-click trading,
+                                           select desired size above and use Limit Order Book directly"
+                                >
+                                    <InfoIcon />
+                                </Tooltip>
+                            </Grid>
+                        </Grid>
+                        <Grid container justify="space-between" style={{ marginTop: 5 }}>
+                            <Grid item>
+                                <TextField
+                                    style={{ fontSize: 18 }}
+                                    InputProps={{
+                                        style: {
+                                            fontSize: 15,
+                                            height: 40,
+                                            width: 100,
+                                        },
+                                    }}
+                                    InputLabelProps={{
+                                        style: {
+                                            fontSize: 15,
+                                            height: 40,
+                                            width: 100,
+                                        },
+                                        margin: "dense",
+                                    }}
+                                    label="Price"
+                                    variant="outlined"
+                                    inputRef={priceRef}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <TextField
+                                    style={{ fontSize: 18 }}
+                                    InputProps={{
+                                        style: {
+                                            fontSize: 15,
+                                            height: 40,
+                                            width: 100,
+                                        },
+                                    }}
+                                    InputLabelProps={{
+                                        style: {
+                                            fontSize: 15,
+                                            height: 40,
+                                            width: 100,
+                                        },
+                                        margin: "dense",
+                                    }}
+                                    label="Size"
+                                    variant="outlined"
+                                    inputRef={sizeRef}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    type="submit"
+                                    variant="outlined"
+                                    style={{ height: 40, width: 100, fontSize: 15 }}
+                                    onClick={() => {
+                                        toast.dismiss()
+                                        handleOrder(
+                                            {
+                                                side: side,
+                                                price: Number(priceRef.current.valueOf().value),
+                                                size: Number(sizeRef.current.valueOf().value),
+                                            },
+                                            setBook
+                                        )
+                                    }}
+                                >
+                                    Place
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </form>
+                </CardContent>
+            </Card>
         </>
     )
 }
