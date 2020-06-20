@@ -38,6 +38,10 @@ const BidCell = withStyles({
     body: {
         fontSize: 20,
         color: "#4ea8de",
+        "&:hover": {
+            backgroundColor: "blue !important",
+            cursor: "pointer",
+        },
     },
 })(TableCell)
 
@@ -45,6 +49,10 @@ const OfferCell = withStyles({
     body: {
         fontSize: 20,
         color: "#df7373",
+        "&:hover": {
+            backgroundColor: "red !important",
+            cursor: "pointer",
+        },
     },
 })(TableCell)
 
@@ -77,7 +85,7 @@ export default ({
                 </TableHead>
                 <TableBody>
                     {rows.map((row) => (
-                        <TableRow hover key={row.price}>
+                        <TableRow key={row.price}>
                             <OfferCell
                                 align="center"
                                 onClick={() =>

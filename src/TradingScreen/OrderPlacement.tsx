@@ -47,7 +47,7 @@ export default ({
         <>
             <Card
                 style={{
-                    marginLeft: 5,
+                    marginLeft: 15,
                     marginRight: 5,
                     width: 410,
                 }}

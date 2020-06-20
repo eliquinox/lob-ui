@@ -6,7 +6,7 @@ import { Book } from "./types"
 import OrderPlacement from "./OrderPlacement"
 import VwapPanel from "./VwapPanel"
 
-const drawerWidth = 425
+const drawerWidth = 440
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -23,12 +23,14 @@ const useStyles = makeStyles(() => ({
 }))
 
 export default ({
+    book,
     setBook,
     oneClickTrading,
     setOneClickTrading,
     oneClickTradingSize,
     setOneClickTradingSize,
 }: {
+    book?: Book
     setBook: (book: Book) => void
     oneClickTrading: boolean
     setOneClickTrading: (b: boolean) => void
@@ -54,7 +56,7 @@ export default ({
                         oneClickTradingSize={oneClickTradingSize}
                         setOneClickTradingSize={setOneClickTradingSize}
                     />
-                    <VwapPanel />
+                    <VwapPanel book={book} />
                 </List>
             </Drawer>
         </div>

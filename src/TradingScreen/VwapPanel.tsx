@@ -1,6 +1,7 @@
 import { Card, Grid, TextField, Typography } from "@material-ui/core"
 import React, { useEffect, useRef, useState } from "react"
 import { getVwapPricing } from "./requests"
+import { Book } from "./types"
 
 const getNumberFromRef = (ref: React.MutableRefObject<any>): number => {
     const n = ref.current.valueOf().value
@@ -22,18 +23,22 @@ const setVwapPrices = (
     })
 }
 
-export default () => {
+export default ({ book }: { book?: Book }) => {
+    const bookRef = useRef<any>(book)
     const sizeRef = useRef<any>(0)
     const [buyPrice, setBuyPrice] = useState<number>(Number.NaN)
     const [sellPrice, setSellPrice] = useState<number>(Number.NaN)
 
-    useEffect(() => setVwapPrices(getNumberFromRef(sizeRef), setBuyPrice, setSellPrice))
+    useEffect(() => {
+        if (book !== bookRef.current) bookRef.current = book
+        setVwapPrices(getNumberFromRef(sizeRef), setBuyPrice, setSellPrice)
+    }, [bookRef, book])
 
     return (
         <Card
             style={{
                 marginTop: 10,
-                marginLeft: 5,
+                marginLeft: 15,
                 marginRight: 5,
                 width: 410,
             }}
@@ -82,7 +87,7 @@ export default () => {
             </Grid>
             <Grid container justify="space-between" alignItems="center" style={{ marginTop: 10 }}>
                 <Grid item />
-                <Grid item style={{ marginLeft: 5 }}>
+                <Grid item>
                     <Typography variant="h6">To Sell</Typography>
                 </Grid>
 

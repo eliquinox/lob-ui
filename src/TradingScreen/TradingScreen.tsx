@@ -40,7 +40,7 @@ export default () => {
                     <Grid item>
                         <OrderManagementPanel book={book} setBook={setBook} />
                     </Grid>
-                    <Grid item style={{ marginRight: 60 }}>
+                    <Grid item style={{ marginRight: 50 }}>
                         <BookTable
                             book={book}
                             setBook={setBook}
@@ -50,6 +50,7 @@ export default () => {
                     </Grid>
                     <Grid item>
                         <OrderPlacementPanel
+                            book={book}
                             setBook={setBook}
                             oneClickTrading={oneClickTrading}
                             setOneClickTrading={setOneClickTrading}
