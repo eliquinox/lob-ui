@@ -82,6 +82,7 @@ export default ({
                             <Grid item>
                                 <ToggleButtonGroup
                                     size="small"
+                                    style={{ height: 20 }}
                                     value={oneClickTrading && oneClickTradingSize}
                                     exclusive
                                     onChange={handleOneClickTradingSizeChange}
@@ -149,7 +150,7 @@ export default ({
                             <Grid item style={{ marginTop: 8 }}>
                                 <Tooltip
                                     title="Use this panel to place orders manually or trigger one-click trading,
-                                           select desired size above and use Limit Order Book directly"
+                                           select desired size above and use Limit Order Book directly."
                                 >
                                     <InfoIcon />
                                 </Tooltip>

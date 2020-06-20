@@ -1,7 +1,8 @@
-import { Card, Grid, TextField, Typography } from "@material-ui/core"
+import { Card, Grid, TextField, Tooltip, Typography } from "@material-ui/core"
 import React, { useEffect, useRef, useState } from "react"
 import { getVwapPricing } from "./requests"
 import { Book } from "./types"
+import InfoIcon from "@material-ui/icons/Info"
 
 const getNumberFromRef = (ref: React.MutableRefObject<any>): number => {
     const n = ref.current.valueOf().value
@@ -50,9 +51,16 @@ export default ({ book }: { book?: Book }) => {
                 </Grid>
                 <Grid item />
             </Grid>
-            <Grid container justify="space-between">
-                <Grid item />
+            <Grid container spacing={3} justify="center" alignItems="center" alignContent="center">
                 <Grid item>
+                    <Tooltip
+                        title="Input a size of an order to execute and find out the corresponding market prices."
+                        placement="left"
+                    >
+                        <InfoIcon />
+                    </Tooltip>
+                </Grid>
+                <Grid item style={{ marginRight: 20 }}>
                     <TextField
                         style={{ fontSize: 18 }}
                         InputProps={{

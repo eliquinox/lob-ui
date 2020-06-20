@@ -1,8 +1,11 @@
 import { Book } from "./types"
 import { get, keys } from "lodash"
 import React from "react"
+import FlashOnIcon from "@material-ui/icons/FlashOn"
 import {
     Divider,
+    Grid,
+    IconButton,
     Paper,
     Table,
     TableBody,
@@ -10,11 +13,13 @@ import {
     TableContainer,
     TableHead,
     TableRow,
+    Tooltip,
     Typography,
     withStyles,
 } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import { getBook, placeOrder } from "./requests"
+import InfoIcon from "@material-ui/icons/Info"
 
 const useStyles = makeStyles({
     table: {
@@ -71,9 +76,31 @@ export default ({
     const classes = useStyles()
     return (
         <TableContainer component={Paper}>
-            <Typography variant="h5" style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }}>
-                Limit Order Book
-            </Typography>
+            <Grid container justify="space-between" alignItems="center">
+                <Grid item style={{ marginLeft: 10, marginTop: 5 }}>
+                    <Tooltip
+                        title="Use this widget to observe the current state of the limit order book.
+                               Enable one-click trading to place orders using ladder interface."
+                        placement="left"
+                    >
+                        <InfoIcon />
+                    </Tooltip>
+                </Grid>
+                <Grid item style={{ marginLeft: 20 }}>
+                    <Typography variant="h5" style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }}>
+                        Limit Order Book
+                    </Typography>
+                </Grid>
+                <Grid item>
+                    <Tooltip title={`One-click trading ${oneClickTrading ? "enabled" : "disabled"}.`} placement="right">
+                        <span>
+                            <IconButton disabled={!oneClickTrading}>
+                                <FlashOnIcon />
+                            </IconButton>
+                        </span>
+                    </Tooltip>
+                </Grid>
+            </Grid>
             <Divider style={{ borderColor: "#515151" }} />
             <Table className={classes.table} size="small" aria-label="a dense table">
                 <TableHead>
