@@ -50,6 +50,7 @@ export default ({
             >
                 <List>
                     <OrderPlacement
+                        book={book}
                         setBook={setBook}
                         oneClickTrading={oneClickTrading}
                         setOneClickTrading={setOneClickTrading}

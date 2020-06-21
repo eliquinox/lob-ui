@@ -21,14 +21,25 @@ import "react-toastify/dist/ReactToastify.css"
 import { Book, Order } from "./types"
 import { getBook, placeOrder } from "./requests"
 import { ToggleButtonGroup } from "@material-ui/lab"
+import { makeStyles } from "@material-ui/core/styles"
+import { keys, map, get } from "lodash"
+
+const useStyles = makeStyles({
+    rGroupLabel: {
+        fontSize: 12,
+        padding: 0,
+    },
+})
 
 export default ({
+    book,
     setBook,
     oneClickTrading,
     setOneClickTrading,
     oneClickTradingSize,
     setOneClickTradingSize,
 }: {
+    book?: Book
     setBook: (book: Book) => void
     oneClickTrading: boolean
     setOneClickTrading: (b: boolean) => void
@@ -36,9 +47,10 @@ export default ({
     setOneClickTradingSize: (n: number) => void
 }) => {
     const [side, setSide] = useState("bid")
+    const [orderType, setOrderType] = useState("lmt")
     const priceRef = useRef<any>("")
     const sizeRef = useRef<any>("")
-
+    const classes = useStyles()
     const handleOneClickTradingSizeChange = (_: any, newSize: number) => {
         setOneClickTradingSize(newSize)
     }
@@ -156,9 +168,51 @@ export default ({
                                 </Tooltip>
                             </Grid>
                         </Grid>
-                        <Grid container justify="space-between" style={{ marginTop: 5 }}>
-                            <Grid item>
+                        <Grid container justify="space-between" alignItems="flex-start" style={{ marginTop: 5 }}>
+                            <Grid item style={{ marginLeft: 12 }}>
+                                <Grid container direction="column" justify="flex-start" alignItems="flex-end">
+                                    <FormControl component="fieldset">
+                                        <RadioGroup defaultValue="lmt" onChange={(_, type) => setOrderType(type)}>
+                                            <Grid item>
+                                                <FormControlLabel
+                                                    value="lmt"
+                                                    control={
+                                                        <Radio
+                                                            style={{ display: "inline-block", padding: 0 }}
+                                                            color="primary"
+                                                            size="small"
+                                                        />
+                                                    }
+                                                    label="LMT"
+                                                    labelPlacement="end"
+                                                    classes={{ label: classes.rGroupLabel }}
+                                                />
+                                            </Grid>
+                                            <Grid item>
+                                                <FormControlLabel
+                                                    value="mkt"
+                                                    control={
+                                                        <Radio
+                                                            style={{
+                                                                display: "inline-block",
+                                                                padding: 0,
+                                                            }}
+                                                            color="primary"
+                                                            size="small"
+                                                        />
+                                                    }
+                                                    label="MKT"
+                                                    labelPlacement="end"
+                                                    classes={{ label: classes.rGroupLabel }}
+                                                />
+                                            </Grid>
+                                        </RadioGroup>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
+                            <Grid item style={{ marginRight: 5 }}>
                                 <TextField
+                                    disabled={orderType === "mkt"}
                                     style={{ fontSize: 18 }}
                                     InputProps={{
                                         style: {
@@ -180,7 +234,7 @@ export default ({
                                     inputRef={priceRef}
                                 />
                             </Grid>
-                            <Grid item>
+                            <Grid item style={{ marginRight: 3 }}>
                                 <TextField
                                     style={{ fontSize: 18 }}
                                     InputProps={{
@@ -203,7 +257,7 @@ export default ({
                                     inputRef={sizeRef}
                                 />
                             </Grid>
-                            <Grid item>
+                            <Grid item style={{ marginLeft: 2 }}>
                                 <Button
                                     type="submit"
                                     variant="outlined"
@@ -213,7 +267,10 @@ export default ({
                                         handleOrder(
                                             {
                                                 side: side,
-                                                price: Number(priceRef.current.valueOf().value),
+                                                price:
+                                                    orderType === "lmt"
+                                                        ? Number(priceRef.current.valueOf().value)
+                                                        : getMarketPrice(side, book),
                                                 size: Number(sizeRef.current.valueOf().value),
                                             },
                                             setBook
@@ -229,6 +286,13 @@ export default ({
             </Card>
         </>
     )
+}
+
+const getMarketPrice = (side: string, book?: Book) => {
+    const compFunc = side === "bid" ? Math.max : Math.min
+    const bookSide = get(book, side === "bid" ? "offers" : "bids", {})
+    const prices = map(keys(bookSide), Number)
+    return compFunc(...prices)
 }
 
 const handleOrder = (order: Order, setBook: (book: Book) => void) => {
