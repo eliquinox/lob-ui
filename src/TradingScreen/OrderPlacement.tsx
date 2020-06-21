@@ -84,7 +84,6 @@ export default ({
                                     checked={oneClickTrading}
                                     onChange={() => setOneClickTrading(!oneClickTrading)}
                                     color="primary"
-                                    name="checkedB"
                                     inputProps={{ "aria-label": "primary checkbox" }}
                                 />
                             </Grid>
@@ -141,24 +140,26 @@ export default ({
                             <Grid item>
                                 <Typography style={{ marginLeft: 2, marginTop: 10 }}>Side:</Typography>
                             </Grid>
-                            <Grid item style={{ marginRight: 50 }}>
-                                <FormControl component="fieldset">
-                                    <RadioGroup row defaultValue="bid" onChange={(_, side) => setSide(side)}>
+                            <FormControl component="fieldset">
+                                <RadioGroup row defaultValue="bid" onChange={(_, side) => setSide(side)}>
+                                    <Grid item style={{ marginRight: 20 }}>
                                         <FormControlLabel
                                             value="bid"
                                             control={<Radio color="primary" />}
                                             label="Bid"
                                             labelPlacement="start"
                                         />
+                                    </Grid>
+                                    <Grid item style={{ marginRight: 50 }}>
                                         <FormControlLabel
                                             value="offer"
                                             control={<Radio color="primary" />}
                                             label="Offer"
                                             labelPlacement="start"
                                         />
-                                    </RadioGroup>
-                                </FormControl>
-                            </Grid>
+                                    </Grid>
+                                </RadioGroup>
+                            </FormControl>
                             <Grid item style={{ marginTop: 8 }}>
                                 <Tooltip
                                     title="Use this panel to place orders manually or trigger one-click trading,
