@@ -41,7 +41,7 @@ export default ({ book }: { book?: Book }) => {
                 marginTop: 10,
                 marginLeft: 15,
                 marginRight: 5,
-                width: 410,
+                width: 420,
             }}
         >
             <Grid container justify="space-between" style={{ marginBottom: 10 }}>

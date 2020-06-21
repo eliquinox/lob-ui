@@ -61,7 +61,7 @@ export default ({
                 style={{
                     marginLeft: 15,
                     marginRight: 5,
-                    width: 410,
+                    width: 420,
                 }}
             >
                 <CardContent>

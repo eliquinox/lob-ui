@@ -6,7 +6,7 @@ import { Book } from "./types"
 import OrderPlacement from "./OrderPlacement"
 import VwapPanel from "./VwapPanel"
 
-const drawerWidth = 440
+const drawerWidth = 450
 
 const useStyles = makeStyles(() => ({
     root: {

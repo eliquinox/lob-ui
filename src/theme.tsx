@@ -6,7 +6,6 @@ export const theme = createMuiTheme({
     },
     typography: {
         fontFamily: [
-            "-apple-system",
             "BlinkMacSystemFont",
             "Segoe UI",
             "Roboto",
