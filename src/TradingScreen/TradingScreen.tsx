@@ -14,7 +14,10 @@ export default () => {
     const [oneClickTradingSize, setOneClickTradingSize] = useState<number>(1)
 
     useEffect(() => {
-        ;(async () => await getBook(setBook))()
+        const interval = setInterval(() => {
+            ;(async () => await getBook(setBook))()
+        }, 1000)
+        return () => clearInterval(interval)
     }, [])
 
     return (
@@ -40,7 +43,7 @@ export default () => {
                     <Grid item>
                         <OrderManagementPanel book={book} setBook={setBook} />
                     </Grid>
-                    <Grid item style={{ marginRight: 50 }}>
+                    <Grid item style={{ marginRight: 30 }}>
                         <BookTable
                             book={book}
                             setBook={setBook}
@@ -61,11 +64,11 @@ export default () => {
                 </Grid>
             </Grid>
             <ToastContainer
-                position="top-right"
+                position="bottom-right"
                 style={{
                     minWidth: 475,
                 }}
-                autoClose={1000}
+                autoClose={2000}
                 hideProgressBar
                 limit={1}
                 newestOnTop

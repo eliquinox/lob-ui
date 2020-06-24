@@ -255,7 +255,7 @@ const addToast = (promise: Promise<any>) =>
                     <pre style={{ fontWeight: "bold" }}>{JSON.stringify(response.data, undefined, 2)}</pre>
                 </div>,
                 {
-                    position: "top-right",
+                    position: "bottom-right",
                     autoClose: 2000,
                     hideProgressBar: true,
                     closeOnClick: true,
@@ -272,7 +272,7 @@ const addToast = (promise: Promise<any>) =>
                     <pre style={{ fontWeight: "bold" }}>{error.response.data.error}</pre>
                 </div>,
                 {
-                    position: "top-right",
+                    position: "bottom-right",
                     autoClose: 2000,
                     hideProgressBar: true,
                     closeOnClick: true,

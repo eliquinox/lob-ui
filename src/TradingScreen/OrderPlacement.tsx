@@ -296,7 +296,7 @@ const getMarketPrice = (side: string, book?: Book) => {
     return compFunc(...prices)
 }
 
-const handleOrder = (order: Order, setBook: (book: Book) => void) => {
+export const handleOrder = (order: Order, setBook: (book: Book) => void) => {
     placeOrder(order)
         .then((response) => {
             toast.success(
@@ -305,7 +305,7 @@ const handleOrder = (order: Order, setBook: (book: Book) => void) => {
                     <pre style={{ fontWeight: "bold" }}>{JSON.stringify(response.data, undefined, 2)}</pre>
                 </div>,
                 {
-                    position: "top-right",
+                    position: "bottom-right",
                     autoClose: 2000,
                     hideProgressBar: true,
                     closeOnClick: true,
@@ -322,7 +322,7 @@ const handleOrder = (order: Order, setBook: (book: Book) => void) => {
                     <pre style={{ fontWeight: "bold" }}>{error.response.data.error}</pre>
                 </div>,
                 {
-                    position: "top-right",
+                    position: "bottom-right",
                     autoClose: 2000,
                     hideProgressBar: true,
                     closeOnClick: true,

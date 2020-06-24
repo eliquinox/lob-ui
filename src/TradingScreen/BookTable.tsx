@@ -18,8 +18,8 @@ import {
     withStyles,
 } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
-import { getBook, placeOrder } from "./requests"
 import InfoIcon from "@material-ui/icons/Info"
+import { handleOrder } from "./OrderPlacement"
 
 const useStyles = makeStyles({
     table: {
@@ -117,11 +117,14 @@ export default ({
                                 align="center"
                                 onClick={() =>
                                     oneClickTrading &&
-                                    placeOrder({
-                                        side: "offer",
-                                        price: Number(row.price),
-                                        size: oneClickTradingSize,
-                                    }).then(() => getBook(setBook))
+                                    handleOrder(
+                                        {
+                                            side: "offer",
+                                            price: Number(row.price),
+                                            size: oneClickTradingSize,
+                                        },
+                                        setBook
+                                    )
                                 }
                             >
                                 {row.offerVolume}
@@ -131,11 +134,14 @@ export default ({
                                 align="center"
                                 onClick={() =>
                                     oneClickTrading &&
-                                    placeOrder({
-                                        side: "bid",
-                                        price: Number(row.price),
-                                        size: oneClickTradingSize,
-                                    }).then(() => getBook(setBook))
+                                    handleOrder(
+                                        {
+                                            side: "bid",
+                                            price: Number(row.price),
+                                            size: oneClickTradingSize,
+                                        },
+                                        setBook
+                                    )
                                 }
                             >
                                 {row.bidVolume}
