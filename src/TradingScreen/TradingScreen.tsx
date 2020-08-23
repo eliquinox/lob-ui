@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import BookTable from "./BookTable"
-import { Grid, Typography } from "@material-ui/core"
+import { Grid, Link, Typography } from "@material-ui/core"
 import { Book } from "./types"
 import { getBook } from "./requests"
 import CompareArrowsIcon from "@material-ui/icons/CompareArrows"
@@ -33,6 +33,10 @@ export default () => {
                 >
                     <Typography variant="h4">Quid pro Quo</Typography>
                     <CompareArrowsIcon fontSize="large" />
+                    <Typography>
+                        <Link href="https://github.com/eliquinox/jLOB">BE Source Code</Link> |{" "}
+                        <Link href="https://github.com/eliquinox/lob-ui">UI Source Code</Link>
+                    </Typography>
                 </Grid>
                 <Grid
                     container
